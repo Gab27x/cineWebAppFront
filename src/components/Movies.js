@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Paper, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import api from '../api';  // Asegúrate de que api.js está configurado correctamente
+import NavBar from './NavBar';  // Importa el componente NavBar
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -68,96 +69,108 @@ export default function Movies() {
     };
 
     return (
-        <Container maxWidth="lg" style={{ display: 'flex', justifyContent: 'center' }}> {/* Center the container */}
-            <Grid container spacing={3}>
-                {/* Column for the add movie form */}
-                <Grid item xs={12} md={4}>
-                    <Paper style={paperStyle}>
-                        <Typography variant="h4" gutterBottom>
-                            Add Movie
-                        </Typography>
-                        <form onSubmit={handleClick} style={{ width: '100%' }}>
-                            <TextField
-                                label="Title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                fullWidth
-                                required
-                                margin="normal"
-                            />
-                            <TextField
-                                label="Director"
-                                value={director}
-                                onChange={(e) => setDirector(e.target.value)}
-                                fullWidth
-                                required
-                                margin="normal"
-                            />
-                            <TextField
-                                label="Duration (minutes)"
-                                type="number"
-                                value={duration}
-                                onChange={(e) => setDuration(e.target.value)}
-                                fullWidth
-                                required
-                                margin="normal"
-                            />
-                            <TextField
-                                label="Release Date"
-                                type="date"
-                                value={releaseDate}
-                                onChange={(e) => setReleaseDate(e.target.value)}
-                                fullWidth
-                                required
-                                margin="normal"
-                                InputLabelProps={{
-                                    shrink: true, // Ensures that the label stays above the input
-                                }}
-                            />
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                style={{ marginTop: '20px', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} // Center the button
-                            >
+        <div>
+            <NavBar /> {/* Añade el componente NavBar aquí */}
+            <Container 
+                maxWidth="lg" 
+                style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    minHeight: '100vh' 
+                }}
+            >
+                <Grid container spacing={3} justifyContent="center">
+                    {/* Column for the add movie form */}
+                    <Grid item xs={12} md={4}>
+                        <Paper style={paperStyle}>
+                            <Typography variant="h4" gutterBottom>
                                 Add Movie
-                            </Button>
-                        </form>
-                    </Paper>
+                            </Typography>
+                            <form onSubmit={handleClick} style={{ width: '100%' }}>
+                                <TextField
+                                    label="Title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label="Director"
+                                    value={director}
+                                    onChange={(e) => setDirector(e.target.value)}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label="Duration (minutes)"
+                                    type="number"
+                                    value={duration}
+                                    onChange={(e) => setDuration(e.target.value)}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label="Release Date"
+                                    type="date"
+                                    value={releaseDate}
+                                    onChange={(e) => setReleaseDate(e.target.value)}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                    InputLabelProps={{
+                                        shrink: true, // Ensures that the label stays above the input
+                                    }}
+                                />
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ marginTop: '20px', display: 'block', marginLeft: 'auto', marginRight: 'auto' }} // Center the button
+                                >
+                                    Add Movie
+                                </Button>
+                            </form>
+                        </Paper>
+                    </Grid>
+                    {/* Column for the list of movies */}
+                    <Grid item xs={12} md={8}>
+                        <Paper style={{ padding: '20px', width: '100%' }}>
+                            <Typography variant="h6" gutterBottom align="center">
+                                Movie List
+                            </Typography>
+                            <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 650 }} aria-label="customized table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <StyledTableCell>Title</StyledTableCell>
+                                            <StyledTableCell align="right">Director</StyledTableCell>
+                                            <StyledTableCell align="right">Duration (minutes)</StyledTableCell>
+                                            <StyledTableCell align="right">Release Date</StyledTableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {movies.map((movie) => (
+                                            <StyledTableRow key={movie.id}>
+                                                <StyledTableCell component="th" scope="row">
+                                                    {movie.title}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="right">{movie.director}</StyledTableCell>
+                                                <StyledTableCell align="right">{movie.duration}</StyledTableCell>
+                                                <StyledTableCell align="right">{new Date(movie.releaseDate).toLocaleDateString()}</StyledTableCell>
+                                            </StyledTableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Paper>
+                    </Grid>
                 </Grid>
-                {/* Column for the list of movies */}
-                <Grid item xs={12} md={8}>
-                    <Paper style={{ padding: '20px', width: '100%' }}>
-                        <Typography variant="h6" gutterBottom>
-                            Movie List
-                        </Typography>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="customized table">
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell>Title</StyledTableCell>
-                                        <StyledTableCell align="right">Director</StyledTableCell>
-                                        <StyledTableCell align="right">Duration (minutes)</StyledTableCell>
-                                        <StyledTableCell align="right">Release Date</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {movies.map((movie) => (
-                                        <StyledTableRow key={movie.id}>
-                                            <StyledTableCell component="th" scope="row">
-                                                {movie.title}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="right">{movie.director}</StyledTableCell>
-                                            <StyledTableCell align="right">{movie.duration}</StyledTableCell>
-                                            <StyledTableCell align="right">{new Date(movie.releaseDate).toLocaleDateString()}</StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Container>
+            </Container>
+        </div>
     );
 }
